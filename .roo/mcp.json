@@ -24,7 +24,8 @@
         "browser_navigate",
         "browser_type",
         "browser_snapshot",
-        "browser_click"
+        "browser_click",
+        "browser_close"
       ]
     }
   }

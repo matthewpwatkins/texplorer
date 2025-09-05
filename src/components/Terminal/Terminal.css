@@ -1,0 +1,217 @@
+/* VS Code Dark Theme Terminal Styles */
+.terminal-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #1e1e1e;
+  color: #cccccc;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.4;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #3c3c3c;
+}
+
+.terminal-output {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 12px;
+  background-color: #1e1e1e;
+  scrollbar-width: thin;
+  scrollbar-color: #424242 #1e1e1e;
+}
+
+.terminal-output::-webkit-scrollbar {
+  width: 8px;
+}
+
+.terminal-output::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+.terminal-output::-webkit-scrollbar-thumb {
+  background: #424242;
+  border-radius: 4px;
+}
+
+.terminal-output::-webkit-scrollbar-thumb:hover {
+  background: #4f4f4f;
+}
+
+.terminal-line {
+  margin: 0;
+  padding: 0;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.terminal-text {
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* User input styling */
+.terminal-line.user-input .terminal-text {
+  color: #569cd6; /* VS Code blue for user commands */
+}
+
+/* Game output styling */
+.terminal-line.game-output .terminal-text {
+  color: #cccccc; /* Default light gray for game text */
+}
+
+/* Current input line */
+.current-input {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+  position: sticky;
+  bottom: 0;
+  background-color: #1e1e1e;
+  padding: 4px 0;
+}
+
+.terminal-prompt {
+  color: #4ec9b0; /* VS Code teal for prompt */
+  font-weight: bold;
+  margin-right: 4px;
+  flex-shrink: 0;
+}
+
+.terminal-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #569cd6; /* VS Code blue for input text */
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  caret-color: #cccccc;
+}
+
+.terminal-input::placeholder {
+  color: #6a6a6a;
+  font-style: italic;
+}
+
+.terminal-input:disabled {
+  color: #6a6a6a;
+  cursor: not-allowed;
+}
+
+.terminal-cursor {
+  color: #cccccc;
+  animation: blink 1.2s infinite;
+  margin-left: 2px;
+}
+
+/* Loading state */
+.terminal-line.loading .terminal-text {
+  color: #d7ba7d; /* VS Code yellow for loading */
+}
+
+.loading-cursor {
+  animation: blink 1s infinite;
+}
+
+/* Blinking animation */
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+/* Error messages */
+.terminal-line.error .terminal-text {
+  color: #f44747; /* VS Code red for errors */
+}
+
+/* Success messages */
+.terminal-line.success .terminal-text {
+  color: #4ec9b0; /* VS Code teal for success */
+}
+
+/* Warning messages */
+.terminal-line.warning .terminal-text {
+  color: #ffcc02; /* VS Code yellow for warnings */
+}
+
+/* Special game text styling */
+.terminal-line.room-description .terminal-text {
+  color: #9cdcfe; /* VS Code light blue for room descriptions */
+}
+
+.terminal-line.item-description .terminal-text {
+  color: #ce9178; /* VS Code orange for item descriptions */
+}
+
+.terminal-line.npc-dialogue .terminal-text {
+  color: #c586c0; /* VS Code purple for NPC dialogue */
+}
+
+/* Hover effects */
+.terminal-container:hover .terminal-cursor {
+  opacity: 1;
+}
+
+/* Focus states */
+.terminal-input:focus {
+  outline: none;
+}
+
+.terminal-container:focus-within {
+  border-color: #007acc;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .terminal-container {
+    font-size: 12px;
+  }
+  
+  .terminal-output {
+    padding: 6px 8px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .terminal-container {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #ffffff;
+  }
+  
+  .terminal-prompt {
+    color: #ffffff;
+  }
+  
+  .terminal-input {
+    color: #ffffff;
+  }
+}
+
+/* Print styles */
+@media print {
+  .terminal-container {
+    background: white;
+    color: black;
+    border: 1px solid black;
+  }
+  
+  .terminal-cursor,
+  .current-input {
+    display: none;
+  }
+}
