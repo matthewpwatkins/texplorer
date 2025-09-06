@@ -31,25 +31,35 @@ export class Room implements IRoom {
     this.visited = false;
   }
 
-  public getDescription(isLong: boolean = false): string {
+  public getDescription(isLong: boolean = false, gameEngine?: any): string {
     const desc = isLong || !this.visited ? this.longDescription : this.shortDescription;
     
     let result = desc;
     
     // Add items if present
-    if (this.itemIds.length > 0) {
+    if (this.itemIds.length > 0 && gameEngine) {
+      const itemNames = this.itemIds
+        .map(id => gameEngine.getItem(id))
+        .filter(item => item)
+        .map(item => item.name);
+      if (itemNames.length > 0) {
+        result += '\n\nYou can see: ' + itemNames.join(', ');
+      }
+    } else if (this.itemIds.length > 0) {
       result += '\n\nYou can see: ' + this.itemIds.join(', ');
     }
     
     // Add NPCs if present
-    if (this.npcIds.length > 0) {
+    if (this.npcIds.length > 0 && gameEngine) {
+      const npcNames = this.npcIds
+        .map(id => gameEngine.getNPC(id))
+        .filter(npc => npc)
+        .map(npc => npc.name);
+      if (npcNames.length > 0) {
+        result += '\n\nPresent: ' + npcNames.join(', ');
+      }
+    } else if (this.npcIds.length > 0) {
       result += '\n\nPresent: ' + this.npcIds.join(', ');
-    }
-    
-    // Add exits
-    const exitList = this.exits.map(exit => exit.direction).join(', ');
-    if (exitList) {
-      result += '\n\nExits: ' + exitList;
     }
     
     return result;

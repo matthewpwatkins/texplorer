@@ -64,13 +64,24 @@ export class Player implements IPlayer {
     this.currentRoomId = roomId;
   }
 
-  public getInventoryDescription(): string {
+  public getInventoryDescription(gameEngine?: any): string {
     if (this.inventory.length === 0) {
       return "You are not carrying anything.";
     }
 
+    let itemList: string;
+    if (gameEngine) {
+      const itemNames = this.inventory
+        .map(id => gameEngine.getItem(id))
+        .filter(item => item)
+        .map(item => item.name);
+      itemList = itemNames.join(', ');
+    } else {
+      itemList = this.inventory.join(', ');
+    }
+
     const weightDescription = `(${this.getCurrentWeight()}/${this.maxInventoryWeight} kg)`;
-    return `You are carrying: ${this.inventory.join(', ')} ${weightDescription}`;
+    return `You are carrying: ${itemList} ${weightDescription}`;
   }
 
   public getInventoryWeight(itemId: string): number {

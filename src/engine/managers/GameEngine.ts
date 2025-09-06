@@ -361,7 +361,7 @@ export class GameEngine implements IGameEngine {
   }
 
   private handleInventory(): ICommandResult {
-    return { success: true, message: this.player!.getInventoryDescription() };
+    return { success: true, message: this.player!.getInventoryDescription(this) };
   }
 
   private handleHelp(): ICommandResult {
@@ -371,7 +371,7 @@ export class GameEngine implements IGameEngine {
 
   private lookAround(): void {
     const currentRoom = this.getCurrentRoom();
-    this.output(currentRoom.getDescription(true));
+    this.output(currentRoom.getDescription(true, this));
   }
 
   // Helper methods

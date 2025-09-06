@@ -137,7 +137,7 @@ function App() {
     setIsLoading(true);
     try {
       const result = gameEngine.processCommand(command);
-      if (!result.success && result.message) {
+      if (result.message) {
         addOutput(result.message);
       }
     } catch (error) {

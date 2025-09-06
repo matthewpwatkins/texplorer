@@ -15,7 +15,7 @@ export interface IRoom extends IGameEntity {
   npcIds: string[];
   visited: boolean;
   
-  getDescription(isLong?: boolean): string;
+  getDescription(isLong?: boolean, gameEngine?: any): string;
   getExits(): IExit[];
   addItem(itemId: string): void;
   removeItem(itemId: string): void;
