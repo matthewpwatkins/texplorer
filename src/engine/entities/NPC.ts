@@ -10,6 +10,7 @@ export class NPC implements INPC {
   public inventory: string[];
   public dialogues: Map<string, IDialogue>;
   public defaultResponse: string;
+  public responses: string[];
   public specialBehaviors: Record<string, any>;
 
   constructor(
@@ -22,6 +23,7 @@ export class NPC implements INPC {
       startingInventory?: string[];
       dialogues?: IDialogue[];
       defaultResponse?: string;
+      responses?: string[];
       specialBehaviors?: Record<string, any>;
     } = {}
   ) {
@@ -33,6 +35,7 @@ export class NPC implements INPC {
     this.inventory = options.startingInventory ? [...options.startingInventory] : [];
     this.dialogues = new Map();
     this.defaultResponse = options.defaultResponse || `${name} doesn't respond.`;
+    this.responses = options.responses || [];
     this.specialBehaviors = options.specialBehaviors || {};
     
     // Initialize dialogues
@@ -112,6 +115,12 @@ export class NPC implements INPC {
       return `${this.name} says: "${dialogue.response}"`;
     }
 
+    // If we have multiple responses, pick a random one
+    if (this.responses.length > 0) {
+      const randomResponse = this.responses[Math.floor(Math.random() * this.responses.length)];
+      return `${this.name} says: "${randomResponse}"`;
+    }
+    
     return `${this.name} says: "${this.defaultResponse}"`;
   }
 

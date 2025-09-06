@@ -20,7 +20,7 @@ export interface IGameState {
 export interface IPlayer {
   currentRoomId: string;
   inventory: string[];
-  maxInventoryWeight: number;
+  maxInventoryItems: number;
   getCurrentWeight(): number;
   canCarry(itemId: string): boolean;
   addItem(itemId: string): boolean;

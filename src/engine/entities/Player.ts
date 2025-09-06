@@ -3,13 +3,13 @@ import { IPlayer } from '../interfaces';
 export class Player implements IPlayer {
   public currentRoomId: string;
   public inventory: string[];
-  public maxInventoryWeight: number;
+  public maxInventoryItems: number;
   private itemWeights: Map<string, number>;
 
-  constructor(startingRoomId: string, maxWeight: number = 50) {
+  constructor(startingRoomId: string, maxItems: number = 5) {
     this.currentRoomId = startingRoomId;
     this.inventory = [];
-    this.maxInventoryWeight = maxWeight;
+    this.maxInventoryItems = maxItems;
     this.itemWeights = new Map();
   }
 
@@ -22,8 +22,7 @@ export class Player implements IPlayer {
   }
 
   public canCarry(itemId: string): boolean {
-    const itemWeight = this.itemWeights.get(itemId) || 1;
-    return this.getCurrentWeight() + itemWeight <= this.maxInventoryWeight;
+    return this.inventory.length < this.maxInventoryItems;
   }
 
   public addItem(itemId: string): boolean {
@@ -32,7 +31,7 @@ export class Player implements IPlayer {
     }
 
     if (!this.canCarry(itemId)) {
-      return false; // Too heavy
+      return false; // Too many items
     }
 
     this.inventory.push(itemId);
@@ -80,8 +79,8 @@ export class Player implements IPlayer {
       itemList = this.inventory.join(', ');
     }
 
-    const weightDescription = `(${this.getCurrentWeight()}/${this.maxInventoryWeight} kg)`;
-    return `You are carrying: ${itemList} ${weightDescription}`;
+    const countDescription = `(${this.inventory.length}/${this.maxInventoryItems} items)`;
+    return `You are carrying: ${itemList} ${countDescription}`;
   }
 
   public getInventoryWeight(itemId: string): number {
@@ -94,7 +93,7 @@ export class Player implements IPlayer {
 
   // Utility methods for game state management
   public clone(): Player {
-    const clone = new Player(this.currentRoomId, this.maxInventoryWeight);
+    const clone = new Player(this.currentRoomId, this.maxInventoryItems);
     clone.inventory = [...this.inventory];
     clone.itemWeights = new Map(this.itemWeights);
     return clone;
@@ -104,13 +103,13 @@ export class Player implements IPlayer {
     return {
       currentRoomId: this.currentRoomId,
       inventory: this.inventory,
-      maxInventoryWeight: this.maxInventoryWeight,
+      maxInventoryItems: this.maxInventoryItems,
       itemWeights: Object.fromEntries(this.itemWeights)
     };
   }
 
   public static deserialize(data: any): Player {
-    const player = new Player(data.currentRoomId, data.maxInventoryWeight);
+    const player = new Player(data.currentRoomId, data.maxInventoryItems || data.maxInventoryWeight || 10);
     player.inventory = data.inventory || [];
     player.itemWeights = new Map(Object.entries(data.itemWeights || {}));
     return player;

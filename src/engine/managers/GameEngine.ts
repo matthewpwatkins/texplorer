@@ -76,8 +76,8 @@ export class GameEngine implements IGameEngine {
       throw new Error('No game data loaded');
     }
 
-    // Create new player
-    this.player = new Player(this.gameData.metadata.startingRoomId);
+    // Create new player with item count limit instead of weight limit
+    this.player = new Player(this.gameData.metadata.startingRoomId, 5);
     
     // Set up item weights
     this.items.forEach((item, itemId) => {
@@ -294,7 +294,7 @@ export class GameEngine implements IGameEngine {
     }
 
     if (!this.player!.canCarry(item.id)) {
-      return { success: false, message: 'You are carrying too much weight.' };
+      return { success: false, message: 'You are carrying too many items.' };
     }
 
     // Remove from room and add to inventory

@@ -1,5 +1,5 @@
 import * as yaml from 'js-yaml';
-import { IGameData, IItemDefinition, INPCDefinition } from '../interfaces';
+import { IGameData } from '../interfaces';
 import { Room, Item, NPC } from '../entities';
 
 export class GameLoader {
@@ -80,7 +80,7 @@ export class GameLoader {
     );
   }
 
-  public static createItemFromDefinition(itemDef: IItemDefinition): Item {
+  public static createItemFromDefinition(itemDef: any): Item {
     return new Item(
       itemDef.id,
       itemDef.name,
@@ -90,9 +90,9 @@ export class GameLoader {
       {
         isContainer: itemDef.isContainer,
         containerCapacity: itemDef.containerCapacity,
-        isUsable: itemDef.isUsable,
-        useDescription: itemDef.useDescription,
-        canTake: itemDef.canTake,
+        isUsable: itemDef.useable || itemDef.isUsable, // Handle both spellings
+        useDescription: itemDef.use_message || itemDef.useDescription,
+        canTake: itemDef.takeable !== false, // Default to true unless explicitly false
         onTakeMessage: itemDef.onTakeMessage,
         onDropMessage: itemDef.onDropMessage,
         specialProperties: itemDef.specialProperties
@@ -100,17 +100,18 @@ export class GameLoader {
     );
   }
 
-  public static createNPCFromDefinition(npcDef: INPCDefinition): NPC {
+  public static createNPCFromDefinition(npcDef: any): NPC {
     return new NPC(
       npcDef.id,
       npcDef.name,
       npcDef.description,
       {
         longDescription: npcDef.longDescription,
-        isAlive: npcDef.isAlive,
+        isAlive: npcDef.isAlive !== false,
         startingInventory: npcDef.startingInventory,
         dialogues: npcDef.dialogues,
-        defaultResponse: npcDef.defaultResponse,
+        defaultResponse: npcDef.defaultResponse || `${npcDef.name} doesn't respond.`,
+        responses: npcDef.responses || [],
         specialBehaviors: npcDef.specialBehaviors
       }
     );

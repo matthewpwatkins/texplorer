@@ -74,7 +74,7 @@ rooms:
   junction_chamber:
     id: "junction_chamber"
     name: "Junction Chamber"
-    description: "A large chamber where several tunnels converge. Ancient mining equipment lies scattered about - old carts, broken tools, and coils of rotting rope. The chamber echoes with the sound of dripping water. Tunnels lead in multiple directions."
+    description: "A large chamber where several tunnels converge. Ancient mining equipment lies scattered about - old carts, broken tools, and coils of rotting rope. The chamber echoes with the sound of dripping water. Tunnels branch to the south toward the main tunnel, north into the deep mine, east to the treasure chamber, and west to the dragon's lair."
     dark: true
     exits:
       - { direction: "south", roomId: "main_tunnel" }
@@ -270,7 +270,7 @@ items:
   mining_cart:
     id: "mining_cart"
     name: "mining cart"
-    description: "An old wooden mining cart on metal wheels. It's still on the tracks and could potentially be moved."
+    description: "An old wooden mining cart on metal wheels. It's still on the tracks and could potentially be moved, but it's far too heavy and bulky to carry."
     takeable: false
     useable: true
     aliases: ["cart"]
@@ -329,6 +329,11 @@ npcs:
         mine: "That mine's been abandoned for nigh on fifty years now. Lots of stories about what's down there - treasure, danger, strange creatures. Most folks who go in don't come back the same... if they come back at all."
         danger: "Oh, there's talk of an old dragon down in the deep parts. Course, could just be tall tales. But I'd be mighty careful if I were you."
         treasure: "They say the miners found the biggest gold strike this side of California before they all disappeared. Course, that's just what they say."
+    responses:
+      - "Howdy there, stranger! You thinking about that old mine?"
+      - "Been fifty years since anyone worked those tunnels regularly."
+      - "Lot of stories about what's down there, but who knows what's true?"
+      - "You be careful if you go down there, young one."
 
   shopkeeper:
     id: "shopkeeper"
@@ -342,6 +347,10 @@ npcs:
         supplies: "I've got basic mining supplies, but most folks don't need them anymore. That key there might be useful though - found it in some old mining equipment."
         key: "That steel key? Found it in a box of old mining gear. Twenty dollars and it's yours."
         mine: "My grandfather used to work in that mine before it was abandoned. He never liked to talk about why they all left so suddenly."
+    responses:
+      - "Welcome to my store! I don't get many customers these days."
+      - "That key there might be useful if you're heading into the mine."
+      - "Be careful down there - my grandfather said strange things happened."
     trades:
       steel_key:
         cost: 20
