@@ -24,8 +24,6 @@ function App() {
   const [gameState, setGameState] = useState<IGameState | null>(null);
   const [availableGames, setAvailableGames] = useState<GameInfo[]>([]);
 
-  const outputRef = useRef<string[]>([]);
-
   // Load available games on startup
   useEffect(() => {
     const loadAvailableGames = async () => {
@@ -69,8 +67,7 @@ function App() {
   // Setup game engine callbacks only once
   useEffect(() => {
     const outputCallback = (message: string) => {
-      outputRef.current = [...outputRef.current, message];
-      setOutput([...outputRef.current]);
+      setOutput(prev => [...prev, message]);
     };
 
     const stateCallback = (state: IGameState) => {
@@ -80,12 +77,15 @@ function App() {
     gameEngine.onOutput(outputCallback);
     gameEngine.onGameStateChange(stateCallback);
 
-    // No cleanup needed as the game engine instance persists
+    // Cleanup function to prevent duplicate callbacks in StrictMode
+    return () => {
+      gameEngine.removeOutputCallback(outputCallback);
+      gameEngine.removeGameStateChangeCallback(stateCallback);
+    };
   }, [gameEngine]);
 
   const addOutput = useCallback((message: string) => {
-    outputRef.current = [...outputRef.current, message];
-    setOutput([...outputRef.current]);
+    setOutput(prev => [...prev, message]);
   }, []);
 
   const handleCommand = useCallback(async (command: string) => {
@@ -96,7 +96,6 @@ function App() {
     
     // Handle system commands first
     if (command.toLowerCase() === 'clear') {
-      outputRef.current = [];
       setOutput([]);
       return;
     }
@@ -161,7 +160,6 @@ function App() {
     setIsLoading(true);
     try {
       // Clear output for new game before starting
-      outputRef.current = [];
       setOutput([]);
       
       await gameEngine.loadGame(game.data);
@@ -201,7 +199,6 @@ function App() {
   const handleNewGame = useCallback(() => {
     if (currentGame) {
       // Clear output before starting new game
-      outputRef.current = [];
       setOutput([]);
       gameEngine.startNewGame();
     } else {

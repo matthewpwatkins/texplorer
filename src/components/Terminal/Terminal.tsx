@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback, memo } from 'react';
 import './Terminal.css';
 
 interface TerminalProps {
@@ -8,7 +8,7 @@ interface TerminalProps {
   isLoading?: boolean;
 }
 
-export const Terminal: React.FC<TerminalProps> = ({ 
+const TerminalComponent: React.FC<TerminalProps> = ({ 
   onCommand, 
   output, 
   prompt = '> ',
@@ -87,21 +87,28 @@ export const Terminal: React.FC<TerminalProps> = ({
     }
   }, [inputValue, commandHistory, historyIndex, handleSubmit]);
 
-  // Handle clicking anywhere in terminal to focus input
-  const handleTerminalClick = useCallback(() => {
-    if (inputRef.current && !isLoading) {
+  // Handle clicking anywhere in terminal to focus input, but avoid triggering on text selection
+  const handleTerminalClick = useCallback((e: React.MouseEvent) => {
+    // Only focus input if no text is selected
+    const selection = window.getSelection();
+    if ((!selection || selection.toString() === '') && inputRef.current && !isLoading) {
       inputRef.current.focus();
     }
   }, [isLoading]);
 
+  // Prevent re-rendering of output lines by using stable keys and avoiding inline functions
+  const outputLines = React.useMemo(() => {
+    return output.map((line, index) => (
+      <div key={`line-${index}-${line.substring(0, 20)}`} className={`terminal-line ${line.startsWith('> ') ? 'user-input' : 'game-output'}`}>
+        <pre className="terminal-text">{line}</pre>
+      </div>
+    ));
+  }, [output]);
+
   return (
     <div className="terminal-container" onClick={handleTerminalClick}>
       <div ref={terminalRef} className="terminal-output">
-        {output.map((line, index) => (
-          <div key={index} className={`terminal-line ${line.startsWith('> ') ? 'user-input' : 'game-output'}`}>
-            <pre className="terminal-text">{line}</pre>
-          </div>
-        ))}
+        {outputLines}
         {isLoading && (
           <div className="terminal-line loading">
             <pre className="terminal-text">
@@ -132,4 +139,17 @@ export const Terminal: React.FC<TerminalProps> = ({
   );
 };
 
-export default Terminal;
+// Memoize the component to prevent unnecessary re-renders
+const MemoizedTerminal = memo(TerminalComponent, (prevProps, nextProps) => {
+  // Only re-render if output array actually changed (not just reference)
+  return (
+    prevProps.output.length === nextProps.output.length &&
+    prevProps.output.every((line, index) => line === nextProps.output[index]) &&
+    prevProps.prompt === nextProps.prompt &&
+    prevProps.isLoading === nextProps.isLoading &&
+    prevProps.onCommand === nextProps.onCommand
+  );
+});
+
+export const Terminal = MemoizedTerminal;
+export default MemoizedTerminal;

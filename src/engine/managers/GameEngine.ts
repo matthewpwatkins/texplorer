@@ -440,6 +440,25 @@ export class GameEngine implements IGameEngine {
     this.outputCallbacks.push(callback);
   }
 
+  public removeGameStateChangeCallback(callback: (state: IGameState) => void): void {
+    const index = this.gameStateChangeCallbacks.indexOf(callback);
+    if (index > -1) {
+      this.gameStateChangeCallbacks.splice(index, 1);
+    }
+  }
+
+  public removeOutputCallback(callback: (message: string) => void): void {
+    const index = this.outputCallbacks.indexOf(callback);
+    if (index > -1) {
+      this.outputCallbacks.splice(index, 1);
+    }
+  }
+
+  public clearAllCallbacks(): void {
+    this.gameStateChangeCallbacks = [];
+    this.outputCallbacks = [];
+  }
+
   private notifyGameStateChange(): void {
     if (this.gameState) {
       this.gameStateChangeCallbacks.forEach(callback => callback(this.gameState!));
