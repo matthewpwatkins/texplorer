@@ -155,11 +155,11 @@ export class GameEngine implements IGameEngine {
     let result: ICommandResult;
 
     try {
-      result = this.executeCommand(command);
+      result = this.executeCommand(command, input);
     } catch (error) {
-      result = { 
-        success: false, 
-        message: `Error executing command: ${error instanceof Error ? error.message : 'Unknown error'}` 
+      result = {
+        success: false,
+        message: `Error executing command: ${error instanceof Error ? error.message : 'Unknown error'}`
       };
     }
 
@@ -170,7 +170,7 @@ export class GameEngine implements IGameEngine {
     return result;
   }
 
-  private executeCommand(command: ICommand): ICommandResult {
+  private executeCommand(command: ICommand, originalInput: string): ICommandResult {
     const verb = command.verb.toLowerCase();
 
     switch (verb) {
@@ -209,7 +209,7 @@ export class GameEngine implements IGameEngine {
         return { success: false, message: 'Please enter a command.' };
       
       default:
-        return { success: false, message: `I don't understand "${verb}".` };
+        return { success: false, message: `I don't understand "${originalInput}".` };
     }
   }
 
