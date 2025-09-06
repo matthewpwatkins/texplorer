@@ -88,6 +88,8 @@ function App() {
     setOutput(prev => [...prev, message]);
   }, []);
 
+  const handleGameSelectRef = useRef<((gameId: string) => Promise<void>) | null>(null);
+
   const handleCommand = useCallback(async (command: string) => {
     if (!command.trim()) return;
 
@@ -119,7 +121,7 @@ function App() {
       );
       
       if (game) {
-        await handleGameSelect(game.id);
+        await handleGameSelectRef.current?.(game.id);
         return;
       } else {
         addOutput(`Game "${gameId}" not found. Type "games" to see available games.`);
@@ -176,10 +178,15 @@ function App() {
     }
   }, [availableGames, addOutput, gameEngine, navigate]);
 
+  // Store the latest handleGameSelect in the ref
+  useEffect(() => {
+    handleGameSelectRef.current = handleGameSelect;
+  }, [handleGameSelect]);
+
   // Handle URL-based game loading
   useEffect(() => {
     const path = location.pathname;
-    const gameMatch = path.match(/^\/games\/([^\/]+)$/);
+    const gameMatch = path.match(/^\/games\/([^/]+)$/);
     
     if (gameMatch && availableGames.length > 0) {
       const gameId = gameMatch[1];
