@@ -66,6 +66,13 @@ export class CommandParser {
     const cleanInput = input.trim().toLowerCase();
     const expandedInput = this.expandDirections(cleanInput);
     
+    // DEBUG: Log input processing
+    console.log('CommandParser DEBUG:', {
+      originalInput: input,
+      cleanInput,
+      expandedInput
+    });
+    
     // Handle single direction commands
     if (this.directions.has(expandedInput)) {
       return {
@@ -81,6 +88,14 @@ export class CommandParser {
     const verbs = doc.verbs().out('array');
     const nouns = doc.nouns().out('array');
     const adjectives = doc.adjectives().out('array');
+    
+    // DEBUG: Log what NLP extracted
+    console.log('CommandParser DEBUG - NLP extraction:', {
+      verbs,
+      nouns,
+      adjectives,
+      expandedInput
+    });
     
     // Handle special cases first
     if (cleanInput.includes('inventory') || cleanInput === 'i' || cleanInput === 'inv') {
@@ -102,11 +117,39 @@ export class CommandParser {
     let indirectObject = '';
 
     if (verbs.length > 0) {
+      const originalVerb = verbs[0];
       verb = this.normalizeVerb(verbs[0]);
+      console.log('CommandParser DEBUG - Verb processing:', {
+        originalVerb,
+        normalizedVerb: verb,
+        allVerbs: verbs
+      });
     } else if (nouns.length > 0 && this.directions.has(nouns[0])) {
       // Handle cases like "north" without "go"
       verb = 'go';
       object = nouns[0];
+    } else {
+      // Fallback: Check if the first word is a known command verb
+      const words = expandedInput.split(/\s+/);
+      if (words.length > 0) {
+        const firstWord = words[0];
+        const knownVerbs = Array.from(this.synonyms.keys());
+        const allKnownVerbs = knownVerbs.concat(...Array.from(this.synonyms.values()).flat());
+        
+        if (knownVerbs.includes(firstWord) || allKnownVerbs.includes(firstWord)) {
+          verb = this.normalizeVerb(firstWord);
+          // Remove the verb from the input to get the object
+          const remainingWords = words.slice(1);
+          object = remainingWords.join(' ');
+          console.log('CommandParser DEBUG - Fallback verb detection:', {
+            firstWord,
+            normalizedVerb: verb,
+            object,
+            knownVerbs,
+            allKnownVerbs
+          });
+        }
+      }
     }
 
     // Extract objects and prepositions
@@ -151,12 +194,15 @@ export class CommandParser {
       }
     }
 
-    return {
+    const result = {
       verb: verb || 'unknown',
       object: object || undefined,
       preposition: preposition || undefined,
       indirectObject: indirectObject || undefined
     };
+    
+    console.log('CommandParser DEBUG - Final result:', result);
+    return result;
   }
 
   private getSynonymVerb(word: string): string | null {

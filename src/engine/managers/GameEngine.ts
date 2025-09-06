@@ -172,6 +172,13 @@ export class GameEngine implements IGameEngine {
 
   private executeCommand(command: ICommand, originalInput: string): ICommandResult {
     const verb = command.verb.toLowerCase();
+    
+    // DEBUG: Log command execution
+    console.log('GameEngine DEBUG - Executing command:', {
+      originalInput,
+      parsedCommand: command,
+      verb
+    });
 
     switch (verb) {
       case 'go':
