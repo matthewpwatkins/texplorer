@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
 import { Terminal, MenuBar, HelpModal } from './components';
 import { GameEngine, GameLoader } from './engine/managers';
 import { IGameData, IGameState } from './engine/interfaces';
@@ -65,16 +66,21 @@ function App() {
     loadAvailableGames();
   }, []);
 
-  // Setup game engine callbacks
+  // Setup game engine callbacks only once
   useEffect(() => {
-    gameEngine.onOutput((message: string) => {
+    const outputCallback = (message: string) => {
       outputRef.current = [...outputRef.current, message];
       setOutput([...outputRef.current]);
-    });
+    };
 
-    gameEngine.onGameStateChange((state: IGameState) => {
+    const stateCallback = (state: IGameState) => {
       setGameState(state);
-    });
+    };
+
+    gameEngine.onOutput(outputCallback);
+    gameEngine.onGameStateChange(stateCallback);
+
+    // No cleanup needed as the game engine instance persists
   }, [gameEngine]);
 
   const addOutput = useCallback((message: string) => {
@@ -142,6 +148,9 @@ function App() {
     }
   }, [currentGame, availableGames, addOutput, gameEngine]);
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const handleGameSelect = useCallback(async (gameId: string) => {
     const game = availableGames.find(g => g.id === gameId);
     if (!game) {
@@ -151,26 +160,50 @@ function App() {
 
     setIsLoading(true);
     try {
+      // Clear output for new game before starting
+      outputRef.current = [];
+      setOutput([]);
+      
       await gameEngine.loadGame(game.data);
       gameEngine.startNewGame();
       setCurrentGame(game.title);
       
-      // Clear output for new game
-      outputRef.current = [];
-      setOutput([]);
+      // Update URL
+      navigate(`/games/${gameId}`);
       
     } catch (error) {
       addOutput(`Error loading game: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsLoading(false);
     }
-  }, [availableGames, addOutput, gameEngine]);
+  }, [availableGames, addOutput, gameEngine, navigate]);
+
+  // Handle URL-based game loading
+  useEffect(() => {
+    const path = location.pathname;
+    const gameMatch = path.match(/^\/games\/([^\/]+)$/);
+    
+    if (gameMatch && availableGames.length > 0) {
+      const gameId = gameMatch[1];
+      const game = availableGames.find(g => g.id === gameId);
+      
+      if (game && !currentGame) {
+        // Only auto-load if no game is currently loaded
+        handleGameSelect(gameId);
+      } else if (!game) {
+        // Game not found, redirect to home
+        navigate('/');
+        addOutput(`Game "${gameId}" not found. Redirected to home.`);
+      }
+    }
+  }, [location.pathname, availableGames, currentGame, handleGameSelect, navigate, addOutput]);
 
   const handleNewGame = useCallback(() => {
     if (currentGame) {
-      gameEngine.startNewGame();
+      // Clear output before starting new game
       outputRef.current = [];
       setOutput([]);
+      gameEngine.startNewGame();
     } else {
       addOutput('No game loaded. Please select a game first.');
     }
@@ -221,7 +254,7 @@ function App() {
     setShowHelp(false);
   }, []);
 
-  return (
+  const GameComponent = () => (
     <div className="app">
       <MenuBar
         currentGame={currentGame || undefined}
@@ -247,6 +280,13 @@ function App() {
         onClose={handleHelpClose}
       />
     </div>
+  );
+
+  return (
+    <Routes>
+      <Route path="/" element={<GameComponent />} />
+      <Route path="/games/:gameId" element={<GameComponent />} />
+    </Routes>
   );
 }
 

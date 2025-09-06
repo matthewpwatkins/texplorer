@@ -21,8 +21,8 @@ rooms:
     name: "Mine Entrance"
     description: "You stand before the dark entrance to an abandoned mine. The wooden supports look sturdy enough, though covered in decades of moss and decay. A rusty sign warns 'DANGER - ABANDONED MINE - ENTER AT YOUR OWN RISK'. To the north, a rough-hewn tunnel disappears into darkness. The forest path leads south back to civilization."
     exits:
-      north: "main_tunnel"
-      south: "forest_path"
+      - { direction: "north", roomId: "main_tunnel" }
+      - { direction: "south", roomId: "forest_path" }
     items:
       - "brass_lamp"
     first_visit: "As you approach the mine entrance, you notice an old brass lamp sitting on a wooden crate. The mine shaft ahead looks pitch black."
@@ -32,8 +32,8 @@ rooms:
     name: "Forest Path"
     description: "A winding dirt path through dense forest. Tall pine trees tower overhead, and you can hear birds chirping in the distance. The path continues south toward town, while the mine entrance lies to the north."
     exits:
-      north: "mine_entrance"
-      south: "town_square"
+      - { direction: "north", roomId: "mine_entrance" }
+      - { direction: "south", roomId: "town_square" }
     items:
       - "sturdy_rope"
 
@@ -42,8 +42,8 @@ rooms:
     name: "Town Square"
     description: "The quiet town square of an old mining settlement. A few weathered buildings surround the cobblestone plaza. An old-timer sits on a bench, whittling. The general store to the east appears to be open."
     exits:
-      north: "forest_path"
-      east: "general_store"
+      - { direction: "north", roomId: "forest_path" }
+      - { direction: "east", roomId: "general_store" }
     npcs:
       - "old_timer"
 
@@ -52,7 +52,7 @@ rooms:
     name: "General Store"
     description: "A dusty general store filled with mining supplies and provisions. Shelves line the walls, stocked with tools, food, and various odds and ends. The shopkeeper eyes you curiously from behind the counter."
     exits:
-      west: "town_square"
+      - { direction: "west", roomId: "town_square" }
     npcs:
       - "shopkeeper"
     items:
@@ -64,10 +64,10 @@ rooms:
     description: "A wide tunnel carved from solid rock, supported by heavy wooden beams. The air is cool and damp. Old rail tracks run along the floor, disappearing into darkness in both directions. Your lamp casts dancing shadows on the rough walls."
     dark: true
     exits:
-      south: "mine_entrance"
-      north: "junction_chamber"
-      east: "crystal_cavern"
-      west: "underground_lake"
+      - { direction: "south", roomId: "mine_entrance" }
+      - { direction: "north", roomId: "junction_chamber" }
+      - { direction: "east", roomId: "crystal_cavern" }
+      - { direction: "west", roomId: "underground_lake" }
     items:
       - "rusty_pickaxe"
 
@@ -77,10 +77,10 @@ rooms:
     description: "A large chamber where several tunnels converge. Ancient mining equipment lies scattered about - old carts, broken tools, and coils of rotting rope. The chamber echoes with the sound of dripping water. Tunnels lead in multiple directions."
     dark: true
     exits:
-      south: "main_tunnel"
-      north: "deep_mine"
-      east: "treasure_chamber"
-      west: "dragon_lair"
+      - { direction: "south", roomId: "main_tunnel" }
+      - { direction: "north", roomId: "deep_mine" }
+      - { direction: "east", roomId: "treasure_chamber" }
+      - { direction: "west", roomId: "dragon_lair" }
     items:
       - "mining_cart"
 
@@ -90,8 +90,8 @@ rooms:
     description: "A breathtaking natural cavern filled with glittering crystals that reflect your lamp light in rainbow patterns. The floor is covered with crystal formations, and a small underground stream trickles through. The beauty is almost otherworldly."
     dark: true
     exits:
-      west: "main_tunnel"
-      north: "hidden_grotto"
+      - { direction: "west", roomId: "main_tunnel" }
+      - { direction: "north", roomId: "hidden_grotto" }
     items:
       - "crystal_shard"
       - "small_cage"
@@ -101,7 +101,7 @@ rooms:
     name: "Hidden Grotto"
     description: "A secret grotto hidden behind the crystal formations. Ancient cave paintings cover the walls, depicting miners and strange underground creatures. A shaft of natural light filters down from far above."
     exits:
-      south: "crystal_cavern"
+      - { direction: "south", roomId: "crystal_cavern" }
     items:
       - "ancient_map"
       - "golden_nugget"
@@ -112,8 +112,8 @@ rooms:
     description: "An vast underground lake with crystal-clear water. The ceiling disappears into darkness above, and you can hear the gentle lapping of water against stone shores. A small wooden boat is tied to a makeshift dock."
     dark: true
     exits:
-      east: "main_tunnel"
-      north: "boat_crossing"
+      - { direction: "east", roomId: "main_tunnel" }
+      - { direction: "north", roomId: "boat_crossing" }
     items:
       - "wooden_boat"
 
@@ -123,8 +123,8 @@ rooms:
     description: "You are floating on the underground lake in the wooden boat. The water is surprisingly clear, and you can see strange fish swimming in the depths below. The shore lies to the south, and a mysterious island rises from the water to the north."
     dark: true
     exits:
-      south: "underground_lake"
-      north: "treasure_island"
+      - { direction: "south", roomId: "underground_lake" }
+      - { direction: "north", roomId: "treasure_island" }
     requires_item: "wooden_boat"
 
   treasure_island:
@@ -133,7 +133,7 @@ rooms:
     description: "A small rocky island in the center of the underground lake. Ancient stone pillars rise from the ground, and in the center sits an ornate treasure chest. The whole island seems to hum with mysterious energy."
     dark: true
     exits:
-      south: "boat_crossing"
+      - { direction: "south", roomId: "boat_crossing" }
     items:
       - "treasure_chest"
 
@@ -143,7 +143,7 @@ rooms:
     description: "A massive cavern that serves as the lair of an ancient dragon. The floor is littered with bones and treasure. The dragon, enormous and fearsome, currently sleeps fitfully on a pile of gold coins. Its breathing echoes through the chamber."
     dark: true
     exits:
-      east: "junction_chamber"
+      - { direction: "east", roomId: "junction_chamber" }
     npcs:
       - "ancient_dragon"
     items:
@@ -155,7 +155,7 @@ rooms:
     description: "A hidden chamber filled with mining artifacts and precious metals. Gold veins run through the walls, and gems sparkle in the lamplight. This must be where the miners stored their most valuable finds."
     dark: true
     exits:
-      west: "junction_chamber"
+      - { direction: "west", roomId: "junction_chamber" }
     items:
       - "silver_coins"
       - "precious_gems"
@@ -167,8 +167,8 @@ rooms:
     description: "The deepest part of the mine, where the original miners dug seeking the mother lode. The walls are carved from solid rock, and the air grows thin. Strange symbols are carved into the stone, possibly by the miners or something else entirely."
     dark: true
     exits:
-      south: "junction_chamber"
-      down: "bottomless_pit"
+      - { direction: "south", roomId: "junction_chamber" }
+      - { direction: "down", roomId: "bottomless_pit" }
     items:
       - "mysterious_orb"
 
@@ -178,7 +178,7 @@ rooms:
     description: "You stand at the edge of what appears to be a bottomless pit. Your lamp light fails to reach the bottom, and small stones dropped into it never make a sound. A cold wind blows up from the depths. This is definitely not a place to fall."
     dark: true
     exits:
-      up: "deep_mine"
+      - { direction: "up", roomId: "deep_mine" }
     dangerous: true
 
 # All items in the game
