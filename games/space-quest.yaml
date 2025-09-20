@@ -1,0 +1,475 @@
+title: "Space Quest: Starship Escape"
+description: "A science fiction text adventure set aboard a damaged starship. Navigate through alien technology, solve technical puzzles, and escape before the ship's reactor goes critical."
+author: "Texplorer Team"
+version: "1.0.0"
+
+# Starting location and initial game state
+start_location: "escape_pod_bay"
+max_score: 1000
+
+# Global game variables
+variables:
+  reactor_stable: false
+  security_lockdown: true
+  oxygen_level: 100
+  power_restored: false
+  alien_translator_active: false
+  emergency_mode: true
+
+# All rooms in the starship
+rooms:
+  escape_pod_bay:
+    id: "escape_pod_bay"
+    name: "Escape Pod Bay"
+    description: "You find yourself in the escape pod bay of what appears to be an alien starship. Emergency lighting casts an eerie red glow over the metallic walls. Three escape pods line the far wall, but their status lights show they are non-functional. A blast door to the north leads deeper into the ship, while warning signs in an alien script flash ominously."
+    exits:
+      north: "main_corridor"
+    items:
+      - "emergency_kit"
+      - "damaged_scanner"
+    first_visit: "Warning: Life support compromised. Reactor instability detected. Recommend immediate evacuation."
+
+  main_corridor:
+    id: "main_corridor"
+    name: "Main Corridor"
+    description: "A long corridor stretches before you, lined with smooth metallic walls that pulse with faint bioluminescent patterns. The architecture is clearly alien - organic curves blend with technological precision. Emergency lighting flickers intermittently. Doorways lead to various ship sections, and a large display screen shows ship schematics in an alien language."
+    exits:
+      south: "escape_pod_bay"
+      north: "bridge"
+      east: "engineering"
+      west: "crew_quarters"
+      up: "observation_deck"
+    items:
+      - "ship_manual"
+    environmental_hazard: "low_oxygen"
+
+  bridge:
+    id: "bridge"
+    name: "Ship's Bridge"
+    description: "The ship's command center is a marvel of alien technology. Crystalline displays float in mid-air, showing star charts and ship diagnostics. The captain's chair sits empty in the center, surrounded by control consoles that pulse with soft blue light. Through the main viewscreen, you can see stars slowly spinning - the ship is tumbling through space."
+    exits:
+      south: "main_corridor"
+      east: "navigation_room"
+    items:
+      - "captain_keycard"
+      - "star_charts"
+    npcs:
+      - "ship_ai"
+
+  navigation_room:
+    id: "navigation_room"
+    name: "Navigation Control Room"
+    description: "A sophisticated navigation center filled with holographic star maps and trajectory calculations. The room hums with the sound of quantum processors working at maximum capacity. Warning indicators suggest the ship's navigation systems are severely damaged."
+    exits:
+      west: "bridge"
+    items:
+      - "navigation_chip"
+      - "quantum_compass"
+
+  engineering:
+    id: "engineering"
+    name: "Engineering Bay"
+    description: "The ship's engineering section is a maze of conduits, plasma relays, and humming machinery. The main reactor core dominates the center of the room, pulsing with an unstable orange glow. Diagnostic panels flash warnings about critical system failures. This is clearly where the ship's problems originate."
+    exits:
+      west: "main_corridor"
+      south: "reactor_room"
+      north: "power_distribution"
+    items:
+      - "plasma_wrench"
+      - "diagnostic_tablet"
+    environmental_hazard: "radiation"
+
+  reactor_room:
+    id: "reactor_room"
+    name: "Reactor Core Chamber"
+    description: "The heart of the alien starship - a massive reactor core that towers above you, crackling with barely contained energy. Warning symbols flash around the containment field, and the air itself seems to vibrate with power. This is both the source of the ship's problems and potentially its salvation."
+    exits:
+      north: "engineering"
+    items:
+      - "reactor_stabilizer"
+      - "containment_field_generator"
+    npcs:
+      - "maintenance_robot"
+    dangerous: true
+
+  power_distribution:
+    id: "power_distribution"
+    name: "Power Distribution Center"
+    description: "A complex network of energy conduits and distribution nodes. Holographic displays show power flow throughout the ship, with many sections showing critical failures. Banks of exotic batteries line the walls, some still glowing with stored energy."
+    exits:
+      south: "engineering"
+    items:
+      - "power_cell"
+      - "circuit_board"
+
+  crew_quarters:
+    id: "crew_quarters"
+    name: "Crew Quarters"
+    description: "The living spaces of the alien crew members. The rooms are arranged in a hexagonal pattern, each containing furniture and personal effects that suggest a highly advanced but organic-focused civilization. Most rooms appear to have been hastily abandoned."
+    exits:
+      east: "main_corridor"
+      north: "medical_bay"
+      south: "cargo_hold"
+    items:
+      - "alien_uniform"
+      - "personal_communicator"
+
+  medical_bay:
+    id: "medical_bay"
+    name: "Medical Bay"
+    description: "An advanced alien medical facility with bio-tanks, scanning equipment, and surgical suites that defy human understanding. The medical computers are still active, displaying biological data in alien script. A universal translator device sits on one of the examination tables."
+    exits:
+      south: "crew_quarters"
+    items:
+      - "medical_scanner"
+      - "universal_translator"
+      - "healing_serum"
+
+  cargo_hold:
+    id: "cargo_hold"
+    name: "Cargo Hold"
+    description: "A massive storage area filled with containers of various sizes, all secured with alien locking mechanisms. Some containers have broken open, spilling exotic materials and unknown devices. A large airlock dominates one wall."
+    exits:
+      north: "crew_quarters"
+      west: "airlock_chamber"
+    items:
+      - "alien_artifacts"
+      - "rare_crystals"
+      - "gravity_boots"
+
+  airlock_chamber:
+    id: "airlock_chamber"
+    name: "Airlock Chamber"
+    description: "A decontamination and transition chamber between the ship's interior and the cargo bay's external airlock. Warning lights indicate the outer door is sealed, but control panels suggest it could be opened with proper authorization."
+    exits:
+      east: "cargo_hold"
+    items:
+      - "space_suit"
+      - "emergency_beacon"
+
+  observation_deck:
+    id: "observation_deck"
+    name: "Observation Deck"
+    description: "A panoramic viewing area with transparent aluminum windows offering a spectacular view of space. The ship's rotation creates a slowly shifting view of stars, nebulae, and what appears to be a nearby alien space station. Telescope arrays and sensor equipment line the room."
+    exits:
+      down: "main_corridor"
+    items:
+      - "telescope"
+      - "sensor_array"
+      - "star_charts_detailed"
+
+# All items in the game
+items:
+  emergency_kit:
+    id: "emergency_kit"
+    name: "emergency kit"
+    description: "A compact survival kit containing basic tools, emergency food, and a small oxygen tank. Standard equipment for space emergencies."
+    takeable: true
+    aliases: ["kit"]
+    contains: ["oxygen_tank", "emergency_rations", "multi_tool"]
+
+  damaged_scanner:
+    id: "damaged_scanner"
+    name: "damaged scanner"
+    description: "A handheld scanning device with a cracked screen and exposed circuitry. It might be repairable with the right components."
+    takeable: true
+    aliases: ["scanner"]
+    repairable: true
+
+  ship_manual:
+    id: "ship_manual"
+    name: "ship's manual"
+    description: "A holographic manual in alien script. Without a translator, the symbols are meaningless, but the diagrams show ship systems and procedures."
+    takeable: true
+    aliases: ["manual", "book"]
+    requires_item: "universal_translator"
+
+  captain_keycard:
+    id: "captain_keycard"
+    name: "captain's keycard"
+    description: "A crystalline access card that glows with soft blue light. It bears alien symbols indicating command-level authorization."
+    takeable: true
+    aliases: ["keycard", "card", "access_card"]
+
+  star_charts:
+    id: "star_charts"
+    name: "star charts"
+    description: "Holographic star charts showing the current sector of space. They indicate the ship's position and nearby stellar phenomena."
+    takeable: true
+    aliases: ["charts", "maps"]
+
+  navigation_chip:
+    id: "navigation_chip"
+    name: "navigation chip"
+    description: "A quantum storage device containing navigation algorithms and stellar coordinates. Essential for starship navigation."
+    takeable: true
+    aliases: ["chip", "nav_chip"]
+
+  quantum_compass:
+    id: "quantum_compass"
+    name: "quantum compass"
+    description: "A device that shows direction relative to galactic magnetic fields. It spins wildly, indicating the ship's tumbling motion."
+    takeable: true
+    aliases: ["compass"]
+
+  plasma_wrench:
+    id: "plasma_wrench"
+    name: "plasma wrench"
+    description: "An advanced tool that uses contained plasma to cut through alien alloys. Essential for starship maintenance."
+    takeable: true
+    useable: true
+    aliases: ["wrench", "tool"]
+
+  diagnostic_tablet:
+    id: "diagnostic_tablet"
+    name: "diagnostic tablet"
+    description: "A portable device showing real-time ship diagnostics. Critical systems are highlighted in alarming red."
+    takeable: true
+    aliases: ["tablet", "diagnostics"]
+
+  reactor_stabilizer:
+    id: "reactor_stabilizer"
+    name: "reactor stabilizer"
+    description: "A crucial component for maintaining reactor stability. It appears to be damaged but might be repairable."
+    takeable: true
+    useable: true
+    aliases: ["stabilizer"]
+    use_message: "You install the reactor stabilizer. The reactor's output becomes more stable."
+    effects:
+      - set_variable: "reactor_stable"
+        value: true
+
+  containment_field_generator:
+    id: "containment_field_generator"
+    name: "containment field generator"
+    description: "A device that projects energy fields to contain dangerous reactions. Critical for reactor safety."
+    takeable: true
+    useable: true
+    aliases: ["generator", "field_generator"]
+
+  power_cell:
+    id: "power_cell"
+    name: "power cell"
+    description: "A high-capacity energy storage device glowing with stored power. It could restore power to damaged systems."
+    takeable: true
+    useable: true
+    aliases: ["cell", "battery"]
+    use_message: "You connect the power cell. Systems throughout the ship begin to power up."
+    effects:
+      - set_variable: "power_restored"
+        value: true
+
+  circuit_board:
+    id: "circuit_board"
+    name: "circuit board"
+    description: "An alien circuit board with quantum processors and bio-neural pathways. It could repair damaged systems."
+    takeable: true
+    aliases: ["board", "circuits"]
+
+  universal_translator:
+    id: "universal_translator"
+    name: "universal translator"
+    description: "A sophisticated device that can translate between different alien languages. It's currently inactive but appears functional."
+    takeable: true
+    useable: true
+    aliases: ["translator"]
+    use_message: "The universal translator activates, converting alien text into readable language."
+    effects:
+      - set_variable: "alien_translator_active"
+        value: true
+
+  medical_scanner:
+    id: "medical_scanner"
+    name: "medical scanner"
+    description: "An advanced medical diagnostic device that can analyze biological and technological conditions."
+    takeable: true
+    useable: true
+    aliases: ["scanner", "med_scanner"]
+
+  healing_serum:
+    id: "healing_serum"
+    name: "healing serum"
+    description: "A vial of glowing blue liquid that appears to be some kind of universal healing compound."
+    takeable: true
+    useable: true
+    aliases: ["serum", "medicine"]
+
+  space_suit:
+    id: "space_suit"
+    name: "space suit"
+    description: "An alien space suit designed for EVA operations. It appears to be self-sizing and compatible with human physiology."
+    takeable: true
+    wearable: true
+    aliases: ["suit", "eva_suit"]
+
+  emergency_beacon:
+    id: "emergency_beacon"
+    name: "emergency beacon"
+    description: "A distress beacon that can transmit across interstellar distances. It requires power to activate."
+    takeable: true
+    useable: true
+    aliases: ["beacon", "distress_beacon"]
+    requires_item: "power_cell"
+
+  gravity_boots:
+    id: "gravity_boots"
+    name: "gravity boots"
+    description: "Boots that can generate localized gravity fields, allowing movement in zero-G environments."
+    takeable: true
+    wearable: true
+    aliases: ["boots"]
+
+  telescope:
+    id: "telescope"
+    name: "telescope"
+    description: "An advanced space telescope with quantum optics. It can observe distant objects in incredible detail."
+    takeable: false
+    useable: true
+    aliases: ["scope"]
+
+  sensor_array:
+    id: "sensor_array"
+    name: "sensor array"
+    description: "A collection of sensors that can detect various forms of energy, matter, and life signs."
+    takeable: false
+    useable: true
+    aliases: ["sensors", "array"]
+
+# NPCs in the game
+npcs:
+  ship_ai:
+    id: "ship_ai"
+    name: "ship's AI"
+    description: "The ship's artificial intelligence manifests as a holographic interface on the bridge. It appears to be functioning despite the ship's critical condition."
+    location: "bridge"
+    aliases: ["ai", "computer", "ship_computer"]
+    dialogue:
+      greeting: "Greetings, unknown entity. I am the ship's artificial intelligence. Hull breach detected. Life support failing. Reactor instability critical. Do you require assistance?"
+      topics:
+        help: "Primary objective: Stabilize reactor and restore life support. Secondary objective: Restore navigation systems for return to base. I can provide technical guidance if required."
+        reactor: "Reactor containment field failing. Estimated time to critical failure: 47 minutes. Recommend installing reactor stabilizer and repairing containment field generator."
+        navigation: "Navigation systems offline. Quantum compass damaged. Navigation chip required for course calculations. Ship currently tumbling without attitude control."
+        escape: "Escape pods non-functional due to power failure. Alternative: Repair ship systems and navigate to nearby space station, or activate emergency beacon and await rescue."
+
+  maintenance_robot:
+    id: "maintenance_robot"
+    name: "maintenance robot"
+    description: "A spider-like maintenance robot with multiple articulated arms. It's trying to repair reactor components but appears to be malfunctioning."
+    location: "reactor_room"
+    aliases: ["robot", "droid"]
+    hostile: false
+    dialogue:
+      greeting: "DIAGNOSTIC: Multiple system failures detected. This unit requires assistance to complete repairs."
+      topics:
+        repairs: "Primary repairs needed: Reactor stabilizer installation, containment field calibration, power distribution restoration. This unit can assist if provided with proper tools."
+        danger: "WARNING: Reactor will reach critical mass in approximately 45 minutes. Immediate action required to prevent total system failure."
+    helpful: true
+
+# Special events and puzzles
+events:
+  activate_translator:
+    trigger: "use universal_translator"
+    condition: "alien_translator_active == false"
+    message: "The universal translator hums to life. Alien text throughout the ship becomes readable!"
+    effects:
+      - set_variable: "alien_translator_active"
+        value: true
+
+  stabilize_reactor:
+    trigger: "use reactor_stabilizer"
+    location: "reactor_room"
+    condition: "reactor_stable == false"
+    message: "You carefully install the reactor stabilizer. The dangerous fluctuations begin to subside."
+    effects:
+      - set_variable: "reactor_stable"
+        value: true
+      - add_score: 200
+
+  restore_power:
+    trigger: "use power_cell"
+    location: "power_distribution"
+    condition: "power_restored == false"
+    message: "Power flows through the ship's systems. Lights brighten and computers come online."
+    effects:
+      - set_variable: "power_restored"
+        value: true
+      - set_variable: "security_lockdown"
+        value: false
+
+  repair_scanner:
+    trigger: "use circuit_board"
+    target_item: "damaged_scanner"
+    message: "You replace the damaged circuits. The scanner flickers to life and begins functioning normally."
+    effects:
+      - replace_item: "damaged_scanner"
+        with: "functional_scanner"
+
+  activate_beacon:
+    trigger: "use emergency_beacon"
+    condition: "power_restored == true"
+    message: "The emergency beacon activates, sending a distress signal across the galaxy. Help is on the way!"
+    effects:
+      - add_score: 300
+
+# Win conditions
+win_conditions:
+  master_engineer:
+    description: "Fully repair the ship and restore all systems"
+    requirements:
+      - variable: "reactor_stable"
+        value: true
+      - variable: "power_restored"
+        value: true
+      - has_item: "navigation_chip"
+      - location: "bridge"
+    score: 1000
+    message: "Excellent work! You've successfully repaired the alien starship and can now navigate to safety!"
+
+  clever_survivor:
+    description: "Signal for rescue using the emergency beacon"
+    requirements:
+      - variable: "power_restored"
+        value: true
+      - used_item: "emergency_beacon"
+    score: 600
+    message: "Smart thinking! Your distress beacon has been received. A rescue ship is en route!"
+
+  desperate_escape:
+    description: "Make it to the escape pods before reactor failure"
+    requirements:
+      - location: "escape_pod_bay"
+      - variable: "reactor_stable"
+        value: false
+      - time_limit: 2700  # 45 minutes in seconds
+    score: 300
+    message: "You barely make it to the escape pods as the reactor goes critical behind you. A narrow escape!"
+
+# Game messages
+messages:
+  low_oxygen: "Warning: Oxygen levels are dropping. You should find a way to restore life support soon."
+  radiation_warning: "Radiation levels are dangerous in this area. Extended exposure could be harmful."
+  time_pressure: "The ship's reactor is becoming increasingly unstable. Time is running out!"
+  first_time: "Welcome aboard the alien starship! Your survival depends on understanding alien technology and working quickly. The ship is in critical condition - you need to act fast!"
+  translator_needed: "This alien text is unreadable without a universal translator."
+  power_needed: "This system requires power to function. The ship's main power appears to be offline."
+
+# Environmental hazards
+hazards:
+  low_oxygen:
+    description: "Oxygen levels are dangerously low"
+    effect: "gradual_damage"
+    rate: 5  # damage per minute
+    
+  radiation:
+    description: "High radiation levels detected"
+    effect: "gradual_damage"
+    rate: 10  # damage per minute
+    protection: "space_suit"
+
+# Timer events
+timers:
+  reactor_countdown:
+    duration: 2700  # 45 minutes
+    warning_intervals: [2400, 1800, 1200, 600, 300, 60]  # warnings at 40, 30, 20, 10, 5, 1 minutes
+    failure_message: "The reactor reaches critical mass! The ship is destroyed in a massive explosion!"
+    success_condition: "reactor_stable == true"

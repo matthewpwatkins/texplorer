@@ -1,0 +1,428 @@
+title: "Mine Explorer"
+description: "A classic text adventure inspired by Colossal Cave Adventure. Explore an underground mine system, solve puzzles, and discover treasure while avoiding dangerous creatures."
+author: "Texplorer Team"
+version: "1.0.0"
+
+# Starting location and initial game state
+start_location: "mine_entrance"
+max_score: 1000
+
+# Global game variables
+variables:
+  dragon_awake: true
+  bird_caged: false
+  lamp_lit: false
+  lamp_fuel: 100
+
+# All rooms in the mine
+rooms:
+  mine_entrance:
+    id: "mine_entrance"
+    name: "Mine Entrance"
+    description: "You stand before the dark entrance to an abandoned mine. The wooden supports look sturdy enough, though covered in decades of moss and decay. A rusty sign warns 'DANGER - ABANDONED MINE - ENTER AT YOUR OWN RISK'. To the north, a rough-hewn tunnel disappears into darkness. The forest path leads south back to civilization."
+    exits:
+      - { direction: "north", roomId: "main_tunnel" }
+      - { direction: "south", roomId: "forest_path" }
+    items:
+      - "brass_lamp"
+    first_visit: "As you approach the mine entrance, you notice an old brass lamp sitting on a wooden crate. The mine shaft ahead looks pitch black."
+
+  forest_path:
+    id: "forest_path"
+    name: "Forest Path"
+    description: "A winding dirt path through dense forest. Tall pine trees tower overhead, and you can hear birds chirping in the distance. The path continues south toward town, while the mine entrance lies to the north."
+    exits:
+      - { direction: "north", roomId: "mine_entrance" }
+      - { direction: "south", roomId: "town_square" }
+    items:
+      - "sturdy_rope"
+
+  town_square:
+    id: "town_square"
+    name: "Town Square"
+    description: "The quiet town square of an old mining settlement. A few weathered buildings surround the cobblestone plaza. An old-timer sits on a bench, whittling. The general store to the east appears to be open."
+    exits:
+      - { direction: "north", roomId: "forest_path" }
+      - { direction: "east", roomId: "general_store" }
+    npcs:
+      - "old_timer"
+
+  general_store:
+    id: "general_store"
+    name: "General Store"
+    description: "A dusty general store filled with mining supplies and provisions. Shelves line the walls, stocked with tools, food, and various odds and ends. The shopkeeper eyes you curiously from behind the counter."
+    exits:
+      - { direction: "west", roomId: "town_square" }
+    npcs:
+      - "shopkeeper"
+    items:
+      - "steel_key"
+
+  main_tunnel:
+    id: "main_tunnel"
+    name: "Main Tunnel"
+    description: "A wide tunnel carved from solid rock, supported by heavy wooden beams. The air is cool and damp. Old rail tracks run along the floor, disappearing into darkness in both directions. Your lamp casts dancing shadows on the rough walls."
+    dark: true
+    exits:
+      - { direction: "south", roomId: "mine_entrance" }
+      - { direction: "north", roomId: "junction_chamber" }
+      - { direction: "east", roomId: "crystal_cavern" }
+      - { direction: "west", roomId: "underground_lake" }
+    items:
+      - "rusty_pickaxe"
+
+  junction_chamber:
+    id: "junction_chamber"
+    name: "Junction Chamber"
+    description: "A large chamber where several tunnels converge. Ancient mining equipment lies scattered about - old carts, broken tools, and coils of rotting rope. The chamber echoes with the sound of dripping water. Tunnels branch to the south toward the main tunnel, north into the deep mine, east to the treasure chamber, and west to the dragon's lair."
+    dark: true
+    exits:
+      - { direction: "south", roomId: "main_tunnel" }
+      - { direction: "north", roomId: "deep_mine" }
+      - { direction: "east", roomId: "treasure_chamber" }
+      - { direction: "west", roomId: "dragon_lair" }
+    items:
+      - "mining_cart"
+
+  crystal_cavern:
+    id: "crystal_cavern"
+    name: "Crystal Cavern"
+    description: "A breathtaking natural cavern filled with glittering crystals that reflect your lamp light in rainbow patterns. The floor is covered with crystal formations, and a small underground stream trickles through. The beauty is almost otherworldly."
+    dark: true
+    exits:
+      - { direction: "west", roomId: "main_tunnel" }
+      - { direction: "north", roomId: "hidden_grotto" }
+    items:
+      - "crystal_shard"
+      - "small_cage"
+
+  hidden_grotto:
+    id: "hidden_grotto"
+    name: "Hidden Grotto"
+    description: "A secret grotto hidden behind the crystal formations. Ancient cave paintings cover the walls, depicting miners and strange underground creatures. A shaft of natural light filters down from far above."
+    exits:
+      - { direction: "south", roomId: "crystal_cavern" }
+    items:
+      - "ancient_map"
+      - "golden_nugget"
+
+  underground_lake:
+    id: "underground_lake"
+    name: "Underground Lake"
+    description: "An vast underground lake with crystal-clear water. The ceiling disappears into darkness above, and you can hear the gentle lapping of water against stone shores. A small wooden boat is tied to a makeshift dock."
+    dark: true
+    exits:
+      - { direction: "east", roomId: "main_tunnel" }
+      - { direction: "north", roomId: "boat_crossing" }
+    items:
+      - "wooden_boat"
+
+  boat_crossing:
+    id: "boat_crossing"
+    name: "Boat Crossing"
+    description: "You are floating on the underground lake in the wooden boat. The water is surprisingly clear, and you can see strange fish swimming in the depths below. The shore lies to the south, and a mysterious island rises from the water to the north."
+    dark: true
+    exits:
+      - { direction: "south", roomId: "underground_lake" }
+      - { direction: "north", roomId: "treasure_island" }
+    requires_item: "wooden_boat"
+
+  treasure_island:
+    id: "treasure_island"
+    name: "Treasure Island"
+    description: "A small rocky island in the center of the underground lake. Ancient stone pillars rise from the ground, and in the center sits an ornate treasure chest. The whole island seems to hum with mysterious energy."
+    dark: true
+    exits:
+      - { direction: "south", roomId: "boat_crossing" }
+    items:
+      - "treasure_chest"
+
+  dragon_lair:
+    id: "dragon_lair"
+    name: "Dragon's Lair"
+    description: "A massive cavern that serves as the lair of an ancient dragon. The floor is littered with bones and treasure. The dragon, enormous and fearsome, currently sleeps fitfully on a pile of gold coins. Its breathing echoes through the chamber."
+    dark: true
+    exits:
+      - { direction: "east", roomId: "junction_chamber" }
+    npcs:
+      - "ancient_dragon"
+    items:
+      - "gold_pile"
+
+  treasure_chamber:
+    id: "treasure_chamber"
+    name: "Treasure Chamber"
+    description: "A hidden chamber filled with mining artifacts and precious metals. Gold veins run through the walls, and gems sparkle in the lamplight. This must be where the miners stored their most valuable finds."
+    dark: true
+    exits:
+      - { direction: "west", roomId: "junction_chamber" }
+    items:
+      - "silver_coins"
+      - "precious_gems"
+      - "miners_helmet"
+
+  deep_mine:
+    id: "deep_mine"
+    name: "Deep Mine Shaft"
+    description: "The deepest part of the mine, where the original miners dug seeking the mother lode. The walls are carved from solid rock, and the air grows thin. Strange symbols are carved into the stone, possibly by the miners or something else entirely."
+    dark: true
+    exits:
+      - { direction: "south", roomId: "junction_chamber" }
+      - { direction: "down", roomId: "bottomless_pit" }
+    items:
+      - "mysterious_orb"
+
+  bottomless_pit:
+    id: "bottomless_pit"
+    name: "Edge of the Bottomless Pit"
+    description: "You stand at the edge of what appears to be a bottomless pit. Your lamp light fails to reach the bottom, and small stones dropped into it never make a sound. A cold wind blows up from the depths. This is definitely not a place to fall."
+    dark: true
+    exits:
+      - { direction: "up", roomId: "deep_mine" }
+    dangerous: true
+
+# All items in the game
+items:
+  brass_lamp:
+    id: "brass_lamp"
+    name: "brass lamp"
+    description: "An old brass lamp with a glass chimney. It appears to be in working condition and could provide light in dark places."
+    takeable: true
+    useable: true
+    aliases: ["lamp", "lantern", "light"]
+    use_message: "You light the brass lamp. It flickers to life, casting a warm glow around you."
+    effects:
+      - set_variable: "lamp_lit"
+        value: true
+
+  sturdy_rope:
+    id: "sturdy_rope"
+    name: "sturdy rope"
+    description: "A coil of sturdy climbing rope, about 50 feet long. It looks strong enough to support your weight."
+    takeable: true
+    useable: true
+    aliases: ["rope"]
+
+  steel_key:
+    id: "steel_key"
+    name: "steel key"
+    description: "A heavy steel key with intricate engravings. It looks like it might open something important."
+    takeable: true
+    aliases: ["key"]
+
+  rusty_pickaxe:
+    id: "rusty_pickaxe"
+    name: "rusty pickaxe"
+    description: "An old mining pickaxe with a rusty head and worn wooden handle. Despite its age, it still looks functional."
+    takeable: true
+    useable: true
+    aliases: ["pickaxe", "pick"]
+
+  small_cage:
+    id: "small_cage"
+    name: "small cage"
+    description: "A small wicker cage, just the right size for a bird. The door is currently open."
+    takeable: true
+    aliases: ["cage", "birdcage"]
+
+  crystal_shard:
+    id: "crystal_shard"
+    name: "crystal shard"
+    description: "A beautiful crystal shard that glows faintly with its own inner light. It feels warm to the touch."
+    takeable: true
+    aliases: ["crystal", "shard"]
+
+  ancient_map:
+    id: "ancient_map"
+    name: "ancient map"
+    description: "An old parchment map showing the layout of the mine system. Some areas are marked with mysterious symbols."
+    takeable: true
+    aliases: ["map", "parchment"]
+
+  golden_nugget:
+    id: "golden_nugget"
+    name: "golden nugget"
+    description: "A substantial nugget of pure gold, about the size of your thumb. It's quite heavy and valuable."
+    takeable: true
+    aliases: ["nugget", "gold"]
+    value: 100
+
+  wooden_boat:
+    id: "wooden_boat"
+    name: "wooden boat"
+    description: "A small wooden rowboat tied to the dock. It looks seaworthy enough for crossing the underground lake."
+    useable: true
+    aliases: ["boat"]
+    use_message: "You untie the boat and push off from the shore."
+
+  treasure_chest:
+    id: "treasure_chest"
+    name: "treasure chest"
+    description: "An ornate treasure chest bound with iron and secured with a large lock. It's quite heavy and obviously contains something valuable."
+    takeable: false
+    useable: true
+    aliases: ["chest"]
+    requires_item: "steel_key"
+    use_message: "You unlock the treasure chest with the steel key. Inside you find an incredible fortune in gold and gems!"
+    effects:
+      - add_score: 500
+
+  mining_cart:
+    id: "mining_cart"
+    name: "mining cart"
+    description: "An old wooden mining cart on metal wheels. It's still on the tracks and could potentially be moved, but it's far too heavy and bulky to carry."
+    takeable: false
+    useable: true
+    aliases: ["cart"]
+
+  gold_pile:
+    id: "gold_pile"
+    name: "pile of gold"
+    description: "A substantial pile of gold coins and small treasures. The dragon won't be happy if you take this while it's awake."
+    takeable: true
+    aliases: ["gold", "coins", "treasure"]
+    value: 300
+    requires_condition: "dragon_sleeping"
+
+  silver_coins:
+    id: "silver_coins"
+    name: "silver coins"
+    description: "A collection of tarnished silver coins from the old mining days."
+    takeable: true
+    aliases: ["silver", "coins"]
+    value: 50
+
+  precious_gems:
+    id: "precious_gems"
+    name: "precious gems"
+    description: "A handful of cut and polished gems - rubies, emeralds, and sapphires that sparkle brilliantly."
+    takeable: true
+    aliases: ["gems", "jewels"]
+    value: 200
+
+  miners_helmet:
+    id: "miners_helmet"
+    name: "miner's helmet"
+    description: "An old leather mining helmet with a small carbide lamp attached to the front."
+    takeable: true
+    aliases: ["helmet"]
+
+  mysterious_orb:
+    id: "mysterious_orb"
+    name: "mysterious orb"
+    description: "A smooth, dark orb that seems to absorb light. Strange symbols glow faintly on its surface."
+    takeable: true
+    aliases: ["orb", "sphere"]
+    magical: true
+
+# NPCs in the game
+npcs:
+  old_timer:
+    id: "old_timer"
+    name: "old timer"
+    description: "A grizzled old man with a long white beard, wearing faded overalls and a battered hat. He's whittling a piece of wood with a small knife."
+    location: "town_square"
+    aliases: ["old man", "timer", "man"]
+    dialogue:
+      greeting: "Howdy there, stranger! You look like you might be thinking about heading into that old mine."
+      topics:
+        mine: "That mine's been abandoned for nigh on fifty years now. Lots of stories about what's down there - treasure, danger, strange creatures. Most folks who go in don't come back the same... if they come back at all."
+        danger: "Oh, there's talk of an old dragon down in the deep parts. Course, could just be tall tales. But I'd be mighty careful if I were you."
+        treasure: "They say the miners found the biggest gold strike this side of California before they all disappeared. Course, that's just what they say."
+    responses:
+      - "Howdy there, stranger! You thinking about that old mine?"
+      - "Been fifty years since anyone worked those tunnels regularly."
+      - "Lot of stories about what's down there, but who knows what's true?"
+      - "You be careful if you go down there, young one."
+
+  shopkeeper:
+    id: "shopkeeper"
+    name: "shopkeeper"
+    description: "A middle-aged woman with kind eyes and calloused hands. She wears a practical apron over work clothes."
+    location: "general_store"
+    aliases: ["keeper", "shop keeper", "woman"]
+    dialogue:
+      greeting: "Welcome to my store! I don't get many customers these days. What can I help you with?"
+      topics:
+        supplies: "I've got basic mining supplies, but most folks don't need them anymore. That key there might be useful though - found it in some old mining equipment."
+        key: "That steel key? Found it in a box of old mining gear. Twenty dollars and it's yours."
+        mine: "My grandfather used to work in that mine before it was abandoned. He never liked to talk about why they all left so suddenly."
+    responses:
+      - "Welcome to my store! I don't get many customers these days."
+      - "That key there might be useful if you're heading into the mine."
+      - "Be careful down there - my grandfather said strange things happened."
+    trades:
+      steel_key:
+        cost: 20
+        message: "Here's that key. Hope it opens something worthwhile!"
+
+  ancient_dragon:
+    id: "ancient_dragon"
+    name: "ancient dragon"
+    description: "An enormous dragon with scales like polished obsidian. It lies sleeping on a pile of treasure, but its eyes occasionally flutter open. This is clearly a creature of immense power and age."
+    location: "dragon_lair"
+    aliases: ["dragon", "beast"]
+    hostile: true
+    sleeping: true
+    dialogue:
+      greeting: "The dragon stirs slightly as you approach, but doesn't fully wake."
+      wake_message: "The dragon's eyes snap open, glowing like molten gold. It rises to its full, terrifying height!"
+      sleeping: "The dragon sleeps fitfully, occasionally snorting small puffs of smoke."
+    events:
+      wake_on_noise: true
+      calm_with_item: "small_bird"
+
+# Special events and puzzles
+events:
+  light_lamp:
+    trigger: "use brass_lamp"
+    condition: "lamp_lit == false"
+    message: "You light the lamp, dispelling the darkness around you."
+    effects:
+      - set_variable: "lamp_lit"
+        value: true
+
+  cage_bird:
+    trigger: "use small_cage"
+    location: "crystal_cavern"
+    condition: "bird_caged == false"
+    message: "You carefully capture the small bird in the cage. It chirps melodiously."
+    effects:
+      - set_variable: "bird_caged"
+        value: true
+      - add_item: "small_bird"
+
+  calm_dragon:
+    trigger: "use small_bird"
+    location: "dragon_lair"
+    condition: "bird_caged == true"
+    message: "The bird's beautiful song calms the dragon, which settles back to sleep peacefully."
+    effects:
+      - set_variable: "dragon_awake"
+        value: false
+
+# Win conditions
+win_conditions:
+  treasure_hunter:
+    description: "Escape the mine with the greatest treasure"
+    requirements:
+      - has_item: "treasure_chest"
+      - location: "mine_entrance"
+    score: 1000
+    message: "Congratulations! You've successfully explored the mine and escaped with the greatest treasure!"
+
+  dragon_master:
+    description: "Peacefully resolve the dragon encounter"
+    requirements:
+      - variable: "dragon_awake"
+        value: false
+      - has_item: "gold_pile"
+    score: 750
+    message: "You've shown wisdom and compassion by calming the dragon and claiming treasure peacefully!"
+
+# Game messages
+messages:
+  dark_room: "It is too dark to see anything. You need a source of light."
+  lamp_out_of_fuel: "Your lamp flickers and goes out. You need to refill it or find another light source."
+  dangerous_area: "This area looks extremely dangerous. You should be very careful."
+  first_time: "Welcome to Mine Explorer! Type 'help' for available commands, or 'look' to examine your surroundings."

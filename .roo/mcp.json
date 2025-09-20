@@ -1,0 +1,32 @@
+{
+  "mcpServers": {
+    "git": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/inspector",
+        "uvx",
+        "mcp-server-git",
+        "--repository",
+        "./"
+      ]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp",
+        "--browser",
+        "chrome",
+        "--headless"
+      ],
+      "alwaysAllow": [
+        "browser_navigate",
+        "browser_type",
+        "browser_snapshot",
+        "browser_click",
+        "browser_close"
+      ]
+    }
+  }
+}
