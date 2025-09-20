@@ -37,7 +37,9 @@ function App() {
 
       // Load YAML games
       try {
-        const mineExplorerData = await GameLoader.loadGameFromUrl('/games/mine-explorer.yaml');
+        const mineExplorerData = await GameLoader.loadGameFromUrl(
+          'games/mine-explorer.yaml'
+        );
         games.push({
           id: 'mine-explorer',
           title: 'Mine Explorer',
@@ -48,7 +50,9 @@ function App() {
       }
 
       try {
-        const spaceQuestData = await GameLoader.loadGameFromUrl('/games/space-quest.yaml');
+        const spaceQuestData = await GameLoader.loadGameFromUrl(
+          'games/space-quest.yaml'
+        );
         games.push({
           id: 'space-quest',
           title: 'Space Quest: Starship Escape',
