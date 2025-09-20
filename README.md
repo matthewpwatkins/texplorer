@@ -204,6 +204,24 @@ public/
 3. Add the game to the loading logic in [`App.tsx`](src/App.tsx)
 4. Test thoroughly with various commands
 
+## 🌐 GitHub Pages Deployment
+
+> **If your site does not appear at the expected URL, make sure you have set the GitHub Pages source branch to `gh-pages` (root) in your repository's Settings → Pages. This must be done manually after the first deployment.**
+
+This project is set up for automatic deployment to GitHub Pages using GitHub Actions.
+
+- On every push to the `master` branch, the workflow in [`.github/workflows/gh-pages.yml`](.github/workflows/gh-pages.yml) will build the app and deploy the contents of the `build/` directory to the `gh-pages` branch.
+- The `homepage` field in [`package.json`](package.json) is set for correct asset paths.
+- To trigger a deployment manually, you can run:
+  ```bash
+  npm run deploy
+  ```
+  This will build the app and push the contents of `build/` to the `gh-pages` branch using the `gh-pages` package.
+
+**Important:**
+After the first deployment, go to your repository's **Settings → Pages** and set the source branch to `gh-pages` (root).
+If you see a 404 or the site does not update, make sure the `gh-pages` branch exists and is selected as the source.
+
 ## 🐛 Troubleshooting
 
 ### Common Issues
